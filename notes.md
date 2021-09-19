@@ -50,3 +50,12 @@ Hyperparameters are the 'knobs' we can use to control the training/learning.
 
 
 Decision boundaries:  
+
+
+
+
+
+should review learning objective to determine what I am supposed to understand after each lecture. 
+
+# Thursday September 16th 2021
+

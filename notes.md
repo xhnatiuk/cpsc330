@@ -49,13 +49,10 @@ Hyperparameters are the 'knobs' we can use to control the training/learning.
 
 
 
-Decision boundaries:  
-
-
-
-
+Decision boundaries:    
 
 should review learning objective to determine what I am supposed to understand after each lecture. 
 
-# Thursday September 16th 2021
+# Tuesday September 21st 2021
 
+if complexity grows with more training data the model is non-parametric

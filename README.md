@@ -25,7 +25,7 @@ Usually the homework assignments will be due on Mondays (except next week) and w
 | hw1 | Sept 14, 11:59pm |  [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
 | hw2 | Sept 20, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)| 
 | hw3 | Oct 04, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
-| hw4 | Oct 11, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
+| hw4 | ~~Oct 13, 11:59pm~~<br> Oct 15, 11:59pm  |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
 | hw5 | Oct 25, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
 | **Midterm** | Oct 28, during class time|[Canvas](https://canvas.ubc.ca/courses/78046) | [Canvas](https://canvas.ubc.ca/courses/78046) | 
 | hw6 | Nov 15, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
@@ -37,7 +37,7 @@ Usually the homework assignments will be due on Mondays (except next week) and w
 
 ## Lecture schedule (tentative)
 
-**Live lectures**: The lectures will be in-person in **[Hugh Dempster Pavilion (DMP) 110](http://www.maps.ubc.ca/PROD/index.php) from 11am to 12:20pm**. See the [Calendar](https://htmlpreview.github.io/?https://github.com/UBC-CS/cpsc330/blob/master/docs/calendar.html) for more details. The live lecture recordings will be available [here](https://ubc.ca.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=7cb3d5e9-9fcc-4c76-a287-ad98010bacfe).     
+**Live lectures**: The lectures will be in-person in **[Hugh Dempster Pavilion (DMP) 110](http://www.maps.ubc.ca/PROD/index.php) from 11am to 12:20pm**. See the [Calendar](https://htmlpreview.github.io/?https://github.com/UBC-CS/cpsc330/blob/master/docs/calendar.html) for more details. The live lecture recordings will be available via [Canvas](https://canvas.ubc.ca/courses/78046).     
 
 **Lectures**: 
 - Try to watch the "Pre-watch" videos before each lecture. 
@@ -55,13 +55,13 @@ Usually the homework assignments will be due on Mondays (except next week) and w
 | Sep 21 | [$k$-NNs and SVM with RBF kernel](lectures/04_kNNs-SVM-RBF.ipynb) | 📹  <li> Pre-watch: [4.1](https://youtu.be/hCa3EXEUmQk), [4.2](https://youtu.be/bENDqXKJLmg)</li> <li>During lecture: [4.3](https://youtu.be/IRGbqi5S9gQ), [4.4](https://youtu.be/ic_zqOhi020)</li>  | less depth |
 | Sep 23 | [Preprocessing, `sklearn` pipelines](lectures/05_preprocessing-pipelines.ipynb) | 📹  <li> Pre-watch: [5.1](https://youtu.be/xx9HlmzORRk), [5.2](https://youtu.be/G2IXbVzKlt8)</li><li>During lecture: [5.3](https://youtu.be/nWTce7WJSd4), [5.4](https://youtu.be/2mJ9rAhMMl0)</li>  |  more depth|
 |        |     | **Week 4 dataset:** <li>[California housing](https://www.kaggle.com/harrywang/housing)</li> | |
-| Sep 28 | More preprocessing, `sklearn` `ColumnTransformer`, text features | | more depth |
+| Sep 28 | [More preprocessing, `sklearn` `ColumnTransformer`, text features](lectures/06_column-transformer-text-feats.ipynb) | 📹  <li> Pre-watch: [6.1](https://youtu.be/to2mukSyvLk), [6.2](https://youtu.be/hteVvLwrWZ4)</li> | more depth |
 | Sep 30 | _Truth and reconciliation day - no class_ | |   |
-|        |     |**Week 5 datasets**: <li>[SMS Spam Collection Dataset](https://www.kaggle.com/uciml/sms-spam-collection-dataset)</li> | |
-| Oct 5 | Logistic regression, word counts, `predict_proba`| |   less depth |
-| Oct 7 | Hyperparameter optimization, overfitting the validation set | | less depth | 
-|        |     |**Week 6 datasets**: <li>[Credit Card Fraud Detection](https://www.kaggle.com/mlg-ulb/creditcardfraud)</li> | |
-| Oct 12 | Outliers |  |   different|
+|        |     |**Week 5 datasets**: <li>[IMDB movie review](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)</li> | |
+| Oct 5 | [Linear models](lectures/07_linear-models.ipynb) | 📹  <li> Pre-watch: [7.1](https://youtu.be/HXd1U2q4VFA), [7.2](https://youtu.be/56L5z_t22qE), [7.3](https://youtu.be/_OAK5KiGLg0)</li> |   less depth |
+| Oct 7 | Lecture canceled | |  | 
+|        |     |**Week 6 datasets**: <li>[Spotify Song Attributes](https://www.kaggle.com/geomack/spotifyclassification/home)</li><li>[Credit Card Fraud Detection](https://www.kaggle.com/mlg-ulb/creditcardfraud)</li> | |
+| Oct 12 | Hyperparameter optimization, overfitting the validation set | 📹  <li> Pre-watch: [8.1](https://youtu.be/lMWdHZSZMk8) |   different|
 | Oct 14 | Evaluation metrics for classification  |  | more depth |
 |        |     |**Week 7 datasets**: <li>[Kaggle House Prices data set](https://www.kaggle.com/c/home-data-for-ml-course/)</li> | |
 | Oct 19 | Linear regression, regression metrics |  |   more depth on metrics less depth on regression|

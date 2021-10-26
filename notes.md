@@ -1242,8 +1242,67 @@ print(
 
 # 12: Features Importance & Feature Engineering 
 
+## Feature Correlations
+
+One way for determining the importance of features is to look at the correlations between features and other features in our data.
+
+* Positive Correlation: Y goes up when X goes up
+* Negative Correlation: Y goes down when X goes up
+* Uncorrelated: Y doesn't change when X goes up
+
+This approach is extremely simplistic.
+
+* It only looks at each feature in isolation
+* It only looks at linear associations
+
+Sometimes a feature only becomes important if another feature is *added* or *removed*.
+
+### Ordinal Features
+
+Ordinal features are the easiest to interpret. In a linear regression, if we increase our ordinal feature by 1 category, it effects our model by 1 times its learned coefficient. 
+
+### Categorical Features
+
+With categorical features we consider one of the categories for a feature to be the reference category. We then calculate the difference between the other categories for the feature and the reference category to interpret their effect on the model.
+
+* Ex: if feature 1 changed from category A (reference) to category B (non-reference) if would effect our model by its difference. 
+* Do we really believe these interpretations?
+  * This is how predictions are being made, so yes
+  * But this is likely not how the world works, so no
+
+### Numeric Features
+
+This is trickier than you would expect since we have scaled our numeric features. Our intuition should be that if we increase a numeric feature by 1 scaled unit then if effects our model by 1 times its learned coefficient. 
+
+To interpret a feature we should divide the learned coefficient from the model by the scale coefficient. 
+
+## Interpretability
+
+The ability to interpret our models is crucial in many applications such as: banking, healthcare, and criminal justice. It can be leveraged by domain experts to diagnose systematic errors and underlying biases of complex ML systems.
+
+In this course our definition of model interpretability is **feature importance**. There are more factors in interpretability but this is a good start. 
+
+Feature importance does not have a sign!
+
+* Only tells us about importance, nothing about up or down.
 
 
 
+### Shapley Additive Explanations (SHAP)
+
+A sophisticated measure of the contribution of each feature. We will not go into details of how it works, but we will learn how to use it. 
+
+We can use SHAP to explain predictions on our deployment data. 
+
+We can use average SHAP values to determine global feature importance.
+
+Smaller SHAP values mean that we are less likely to get placed in the target class we are looking at. Synonymous with correlation? 
 
 ## Learning Objectives
+
+* Interpret the coefficients of linear regression for ordinal, one-hot encoded categorical, and scaled numeric features.
+* Explain why interpretability is important in ML.
+* Use `feature_importances_` attribute of `sklearn` models and interpret its output.
+* Use `eli5` to get feature importance of non `sklearn` models and interpret its output.
+* Apply SHAP to assess feature importance and interpret model predictions.
+* Explain force plot, summary plot, and dependence plot produced with shapely values.

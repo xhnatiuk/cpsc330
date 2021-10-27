@@ -1166,7 +1166,212 @@ print(
 
 # 7: Linear Models
 
+**Linear models** is a fundamental and widely used class of models. They are called **linear** because they make a prediction using a **linear function** of the input features.
 
+We will talk about three linear models:
+
+1. Linear regression
+2. Logistic regression
+3. Linear SVM (brief mention)
+
+Strengths of Linear Models:
+
+- Fast to train and predict
+- Scale to large datasets and work well with sparse data
+- Relatively easy to understand and interpret the predictions
+- Perform well when there is a large number of features
+
+Limitations: 
+
+* Is your data “linearly separable”? Can you draw a hyperplane between these datapoints that separates them with 0 error.
+* If the training examples can be separated by a linear decision rule, they are **linearly separable**.
+
+## Linear Regression
+
+The model is a line, which can be represented with a slope (i.e., coefficient or weight) and an intercept.
+
+- For the model, we can access the slope (i.e., coefficient or weight) and the intercept using `coef_` and `intercept_`, respectively.
+
+Given a feature x<sub>1</sub>, a learned coefficient w<sub>1</sub> and an intercept b, we can get the prediction y hat with the following formula:
+$$
+\hat{y} = w_1x_1 + b
+$$
+For more features, the model is a higher dimensional hyperplane and the general prediction formula looks as follows:
+$$
+\hat{y} = w_1x_1 + ... + w_dx_d + b
+$$
+where x are our input features, w are our coefficients (weights learned from the data), and b is the bias which is used to offset our hyperplane (learned from the data).
+
+When we call `fit`, a coefficient or weight is learned for each feature which tells us the  role of that feature in prediction. These coefficients are learned from  the training data.
+
+In linear models for regression, the model is a line for a single  feature, a plane for two features, and a hyperplane for higher  dimensions. We are not yet ready to discuss how does linear regression  learn these coefficients and intercept.
+
+### Ridge
+
+- `scikit-learn` has a model called `LinearRegression` for linear regression.
+- But if we use this “vanilla” version of linear regression, it may result in large coefficients and unexpected results.
+- So instead of using `LinearRegression`, we will always use another linear model called `Ridge`, which is a linear regression model with a complexity hyperparameter `alpha`.
+
+```python
+from sklearn.linear_model import LinearRegression  # DO NOT USE IT
+from sklearn.linear_model import Ridge  # USE THIS INSTEAD
+```
+
+#### Hyperparameter `alpha` of `Ridge`
+
+Ridge has hyperparameters just like the rest of the models we learned.
+
+- The alpha hyperparameter is what makes `Ridge` different from vanilla `LinearRegression`.
+- Similar to the other hyperparameters that we saw, `alpha` controls the fundamental tradeoff.
+- If we set alpha=0 that is the same as using `LinearRegression`.
+
+* larger `alpha` means likely underfit
+
+* smaller `alpha`  likely overfit
+
+#### Coefficients and intercept
+
+The model learns
+
+- coefficients associated with each feature
+- the intercept or bias
+  - For each prediction, we are adding this amount irrespective of the feature values.
+
+### Interpretation of coefficients[¶](https://ubc-cs.github.io/cpsc330/lectures/07_linear-models.html#interpretation-of-coefficients)
+
+One of the main advantages of linear models is that they are relatively easy to interpret. We have one coefficient per feature which kind of describes the role of the feature in the prediction according to the model.
+
+There are two pieces of information in the coefficients based on
+
+- Sign
+  - positive: the prediction will be proportional to the feature value; as it gets bigger our predicted value gets bigger
+  - negative: the prediction will be inversely proportional to the feature value; as it gets bigger our predicted value gets smaller
+- Magnitude
+  - larger magnitudes have a bigger impact on our predictions
+- Take these coefficients with a grain of salt. They might not always match your intuitions.
+
+### Importance of scaling
+
+When you are interpreting the model coefficients, scaling is crucial.
+
+- If you do not scale the data, features with smaller magnitude are going to get coefficients with bigger magnitude whereas features with  bigger scale are going to get coefficients with smaller magnitude.
+- That said, when you scale the data, feature values become hard to interpret for humans!
+
+## Logistic Regression
+
+A linear model for **classification**.
+
+- Similar to linear regression, it learns weights associated with each feature and the bias.
+- It applies a **threshold** on the raw output to decide whether the class is positive or negative.
+- We will focus on the following aspects of logistic regression.
+  - `predict`, `predict_proba`
+  - how to use learned coefficients to interpret the model
+
+Uses learned coefficients and a learned bias similar to linear regression.
+
+* the prediction is based on the weighted sum of the input features.
+
+* Some features are pulling the prediction towards positive and some are pulling it towards negative.
+
+The components of a linear classifier are:
+
+1. input features (x<sub>1</sub>, ..., x<sub>d</sub>)
+2. learned coefficients (weights) (w<sub>1</sub>, ..., w<sub>d</sub>)
+3. bias (b or w<sub>0</sub>) used to offset the hyperplane 
+4. threshold (r) used for classification
+
+### Parameters
+
+Similar to `Ridge`, we can access the weights and intercept using `coef_` and `intercept_` attribute of the `LogisticRegression` object, respectively.
+
+With logistic regression, the model randomly assigns one of the classes as a positive class and the other as negative.
+
+- Usually it would alphabetically order the target and pick the first one as negative and second one as the positive class.
+
+* The `classes_` attribute tells us which class is considered negative and which one is considered 
+
+The decision boundary of logistic regression is a **hyperplane** dividing the feature space in half.
+
+- For d=2, the decision boundary is a line (1-dimensional)
+- For d=3, the decision boundary is a plane (2-dimensional)
+- For d>3, the decision boundary is a -dimensional hyperplane
+
+### Hyperparameters
+
+`C` is the main hyperparameter which controls the fundamental trade-off.
+
+We won’t really talk about the interpretation of this hyperparameter right now.
+
+At a high level, the interpretation is similar to `C` of SVM RBF
+
+- smaller `C` might lead to underfitting
+
+* bigger `C`  might lead to overfitting
+
+## Predicting Probability Scores
+
+So far in the context of classification problems, we focused on getting “hard” predictions. Very often it’s useful to know “soft” predictions, i.e., how confident the model is with a given prediction.
+
+* For most of the `scikit-learn` classification models we can access this confidence score or probability score using a method called `predict_proba`.
+
+- The output of `predict_proba` is the probability of each class.
+- In binary classification, we get probabilities associated with both classes (even though this information is redundant).
+- The first entry is the estimated probability of the first class  and the second entry is the estimated probability of the second class  from `model.classes_`.
+
+- Because it’s a probability, the sum of the entries for both classes should always sum to 1.
+- Since the probabilities for the two classes sum to 1, exactly one of the classes will have a score >=0.5, which is going to be our  predicted class.
+
+### Calculating Probability Score
+
+The linear regression equation gives us our "raw model output". In a linear regression this is our prediction. In logistic regression we check the sign of this value. 
+
+* If positive (or 0), predict 1; if negative, predict -1
+* These are “hard predictions”.
+
+We can also have "soft predictions", our predicted probabilities. To convert the raw model output into probabilities, instead of just taking the sign, we need to apply the sigmoid function.
+
+#### The Sigmoid Function
+
+The sigmoid function “squashes” the raw model output from any number to the range [0,1] using the following formula, where x is the raw model output. 
+$$
+\frac{1}{1 + e^{-x}}
+$$
+Then we can interpret the output as probabilities.
+
+If our predicted probability is greater than or equal to 0.5, then our prediction is +1. 
+
+### Confidence
+
+Sometimes a complex model that is overfitted, tends to make more  confident predictions, even if they are wrong, whereas a simpler model  tends to make predictions with more uncertainty.
+
+- With hard predictions, we only know the class.
+- With probability scores we know how confident the model is with  certain predictions, which can be useful in understanding the model  better.
+
+#### Least Confident Cases
+
+The model is least confident about the prediction.
+
+#### Most Confident Cases
+
+The model is most confident about the prediction.
+
+#### Overconfident Cases
+
+The model is confident about the prediction but the prediction is wrong.
+
+## Linear SVM
+
+We have seen non-linear SVM with RBF kernel before. This is the default SVC model in `sklearn` because it tends to work better in many cases.
+
+* There is also a linear SVM. You can pass `kernel="linear"` to create a linear SVM.
+* `predict` method of linear SVM and logistic regression works the same way.
+* We can get `coef_` associated with the features and `intercept_` using a Linear SVM model.
+* Note that the coefficients and intercept are slightly different for logistic regression.
+* This is because the `fit` for linear SVM and logistic regression are different.
+
+## Model Interpretation of Linear Classifiers
+
+One of the primary advantage of linear classifiers is their ability to interpret models. For example, with the sign and magnitude of learned coefficients we  could answer questions such as which features are driving the prediction to which direction.
 
 ## Learning Objectives
 
@@ -1184,7 +1389,145 @@ print(
 
 # 8: Hyperparameter Optimization & Overfitting
 
+In order to improve the generalization performance, finding the best  values for the important hyperparameters of a model is necessary for  almost all models and datasets. Picking good hyperparameters is important because if we don’t do it, we might end up with an underfit or overfit model.
 
+Manual or expert knowledge or heuristics based optimization
+
+* Advantage: we may have some intuition about what might work.
+  * E.g. if I’m massively overfitting, try decreasing `max_depth` or `C`.
+* Disadvantages
+  - it takes a lot of work
+  - not reproducible
+  - in very complicated cases, our intuition might be worse than a data-driven approach
+
+Data-driven or automated optimization
+
+- Formulate the hyperparamter optimization as a one big search problem.
+- Often we have many hyperparameters of different types: Categorical, integer, and continuous.
+- Often, the search space is quite big and systematic search for optimal values is infeasible.
+
+- Advantages
+  - reduce human effort
+  - less prone to error and improve reproducibility
+  - data-driven approaches may be effective
+- Disadvantages
+  - may be hard to incorporate intuition
+  - be careful about overfitting on the validation set
+
+We are going to talk about two such most commonly used automated optimizations methods from `scikit-learn`.
+
+- Exhaustive grid search: [`sklearn.model_selection.GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
+- Randomized search: [`sklearn.model_selection.RandomizedSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
+
+The “CV” stands for cross-validation; these methods have built-in cross-validation.
+
+Often, especially on typical datasets, we get back `scikit-learn`’s default hyperparameter values. This means that the defaults are well chosen by `scikit-learn` developers!
+
+The problem of finding the best values for the important hyperparameters is tricky because
+
+- You may have a lot of them (e.g. deep learning).
+- You may have multiple hyperparameters which may interact with each other in unexpected ways.
+- The best settings depend on the specific data/problem.
+
+## Exhaustive Grid Search
+
+For `GridSearchCV` we need
+
+- an instantiated model or a pipeline
+- a parameter grid: A user specifies a set of values for each hyperparameter.
+- other optional arguments
+
+The tricky part is we do not know in advance what range of  hyperparameters might work the best for the given problem, model, and  the dataset.
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+pipe_svm = make_pipeline(StandardScaler(), SVC())
+
+param_grid = {
+    "svc__gamma": [0.001, 0.01, 0.1, 1.0, 10, 100],
+    "svc__C": [0.001, 0.01, 0.1, 1.0, 10, 100],
+}
+
+grid_search = GridSearchCV(
+    pipe_svm, param_grid, cv=5, n_jobs=-1, return_train_score=True
+)
+
+grid_search.fit(X_train, y_train) # all the work is done here
+grid_search
+
+grid_search.best_score_
+grid_search.best_params_
+```
+
+- It is often helpful to visualize results of all cross-validation experiments.
+- You can access this information using `cv_results_` attribute of a fitted `GridSearchCV` object.
+
+- Other than searching for best hyperparameter values, `GridSearchCV` also fits a new model on the whole training set with the parameters that yielded the best results.
+- So we can conveniently call `score` on the test set with a fitted `GridSearchCV` object.
+
+```python
+grid_search.score(X_test, y_test)
+```
+
+Note the `n_jobs=-1` above.
+
+- Hyperparameter optimization can be done *in parallel* for each of the configurations.
+- This is very useful when scaling up to large numbers of machines in the cloud.
+
+### The `__` syntax
+
+- Above: we have a nesting of transformers.
+- We can access the parameters of the “inner” objects by using __ to go “deeper”:
+- `svc__gamma`: the `gamma` of the `svc` of the pipeline
+- `svc__C`: the `C` of the `svc` of the pipeline
+
+### Issues
+
+Required number of models to evaluate grows exponentially with the dimensionally of the configuration space.
+
+* 5 hyperparameters
+* 10 different values for each hyperparameter
+* You’ll be evaluating 10 <sup>5</sup> models! That is you’ll be calling `cross_validate` 100,000 times!
+* Exhaustive search may become infeasible fairly quickly.
+
+## Randomized Grid Search
+
+Randomized hyperparameter optimization. Samples configurations at random until certain budget (e.g., time) is exhausted.
+
+### `n_iter`
+
+- Note the `n_iter`, we didn’t need this for `GridSearchCV`.
+- Larger `n_iter` will take longer but it’ll do more searching.
+  - Remember you still need to multiply by number of folds!
+- I have also set `random_state` but you don’t have to do it.
+
+### Advantages
+
+Faster compared to `GridSearchCV`.
+
+- Adding parameters that do not influence the performance does not affect efficiency.
+- Works better when some parameters are more important than others.
+- In general, I recommend using `RandomizedSearchCV` rather than `GridSearchCV`.
+
+## Optimization Bias (Overfitting of the Validation Set)
+
+While carrying out hyperparameter optimization, we usually try over many possibilities. If our dataset is small and if your validation set is hit too many times, we suffer from **optimization bias** or **overfitting the validation set**.
+
+![img](https://amueller.github.io/COMS4995-s20/slides/aml-03-supervised-learning/images/overfitting_validation_set_2.png)
+
+Optimization Bias of Parameter Learning: Overfitting of the training error.
+
+- During training, we could search over tons of different decision trees.
+- So we can get “lucky” and find one with low training error by chance.
+
+Optimization Bias of Hyperparameter Learning: Overfitting of the validation error.
+
+- Here, we might optimize the validation error over 1000 values of `max_depth`.
+- One of the 1000 trees might have low validation error by chance.
+- Thus, not only can we not trust the cv scores, we also cannot trust cv’s ability to choose of the best hyperparameters.
+
+This is why we need a test set. The frustrating part is that if our dataset is small then our test set is also small 😔.
 
 ## Learning Objectives
 
@@ -1195,9 +1538,254 @@ print(
 - explain optimization bias
 - identify and reason when to trust and not trust reported accuracies
 
-# 9: Evaluation Metrics for Classification
+# 9: Classification Metrics
 
+If we have many examples of one class, then even a dummy classifier will score well on the dataset. This is called a class imbalance. 
 
+* Is accuracy a good metric here? 
+* Can we use something other than accuracy to compare our models?
+
+## Confusion Matrix
+
+One way to get a better understanding of the errors is by looking at:
+
+- false positives (type I errors), where the model incorrectly spots examples as fraud
+- false negatives (type II errors), where it’s missing to spot fraud examples
+
+```python
+from sklearn.metrics import confusion_matrix
+
+pipe_lr = make_pipeline(StandardScaler(), LogisticRegression())
+pipe_lr.fit(X_train, y_train)
+predictions = pipe_lr.predict(X_valid)
+TN, FP, FN, TP = confusion_matrix(y_valid, predictions).ravel()
+print(disp.confusion_matrix)
+```
+
+### What are Positive and Negative?
+
+Two kinds of binary classification problems:
+
+1. Distinguishing between two classes
+2. Spotting a class (spot fraud transaction, spot spam, spot disease)
+
+In case of spotting problems, the thing that we are interested in spotting is considered “positive”.
+
+## Precision, Recall, f1 Score
+
+We have been using `.score` to assess our models, which returns accuracy by default.
+
+* Accuracy is misleading when we have class imbalance.
+* We need other metrics to assess our models.
+
+We’ll discuss three commonly used metrics which are based on confusion matrix:
+
+1. recall
+2. precision
+3. f1 score
+
+Note that these metrics will only help us assessing our model.
+
+`scikit-learn` has functions for [these metrics](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics).
+
+### Recall
+
+Among all positive examples, how many did you identify?
+$$
+recall = \frac{TruePositives}{TruePositives + FalseNegatives}
+$$
+
+### Precision
+
+Among the positive examples you identified, how many were actually positive?
+$$
+precision = \frac{TruePositives}{TruePositives + FalsePositives}
+$$
+
+### f1 Score
+
+F1-score combines precision and recall to give one score, which could be used in hyperparameter optimization, for instance.
+
+* F1-score is a harmonic mean of precision and recall.
+
+$$
+f1 = 2*\frac{precision * recall}{precision + recall}
+$$
+
+### Classification Report
+
+There is a convenient function called `classification_report` in `sklearn` which gives this info.
+
+```python
+from sklearn.metrics import classification_report
+
+print(
+    classification_report(
+        y_valid, pipe_lr.predict(X_valid), target_names=["non-fraud", "fraud"]
+    )
+)
+```
+
+Output:
+
+```
+              precision    recall  f1-score   support
+
+   non-fraud       1.00      1.00      1.00     59708
+       fraud       0.89      0.63      0.74       102
+
+    accuracy                           1.00     59810
+   macro avg       0.94      0.81      0.87     59810
+weighted avg       1.00      1.00      1.00     59810
+```
+
+#### Macro Average
+
+You give equal importance to all classes and average over all classes.
+
+* For instance, in the example above, recall for non-fraud is 1.0 and fraud is 0.63, and so macro average is 0.81.
+* More relevant in case of multi-class problems.
+
+#### Weighted Average
+
+- Weighted by the number of samples in each class.
+- Divide by the total number of samples.
+
+Which one is relevant when depends upon whether you think each class  should have the same weight or each sample should have the same weight.
+
+#### Cross Validation
+
+We can pass different evaluation metrics with `scoring` argument of `cross_validate`.
+
+```python
+scoring = [
+    "accuracy",
+    "f1",
+    "recall",
+    "precision",
+]  # scoring can be a string, a list, or a dictionary
+pipe = make_pipeline(StandardScaler(), LogisticRegression())
+scores = cross_validate(
+    pipe, X_train_big, y_train_big, return_train_score=True, scoring=scoring
+)
+pd.DataFrame(scores)
+```
+
+## Precision-Recall Curve and ROC Curve
+
+Confusion matrix provides a detailed break down of the errors made by the model. But when creating a confusion matrix, we are using “hard” predictions.
+
+* Can we explore the degree of uncertainty to understand and improve the model performance?
+
+**Key idea: what if we threshold the probability at a smaller value so that we identify more examples as “positive” examples?**
+
+**Operating point**: Setting a requirement on a classifier (e.g., recall of >= 0.75) is called setting the **operating point**.
+
+* It’s usually driven by business goals and is useful to make performance guarantees to customers.
+
+### Precision/Recall Tradeoff
+
+There is a trade-off between precision and recall. If you identify more things as “positive”, recall is going to increase but there are likely to be more false positives.
+
+**Increasing the threshold**: higher bar for predicting positives.
+
+- recall would go down or stay the same but precision is likely to go up
+- occasionally, precision may go down as the denominator for precision is TP+FP.
+
+**Decreasing the threshold**: lower bar for predicting positives.
+
+- You are willing to risk more false positives in exchange of more true positives.
+- recall would either stay the same or go up and precision is likely to go down
+- occasionally, precision may increase if all the new examples after decreasing the threshold are TPs.
+
+Remember to pick the desired threshold based on the results on the validation set and **not** on the test set.
+
+### Precision/Recall Curve
+
+Often, when developing a model, it’s not always clear what the operating point will be and to understand the the model better, it’s informative  to look at all possible thresholds and corresponding trade-offs of  precision and recall in a plot.
+
+Often it’s useful to have one number summarizing the PR plot (e.g., in hyperparameter optimization)
+
+* One way to do this is by computing the area under the PR curve.
+* This is called **average precision** (AP score)
+* AP score has a value between 0 (worst) and 1 (best).
+
+```python
+from sklearn.metrics import average_precision_score
+
+ap_lr = average_precision_score(y_valid, pipe_lr.predict_proba(X_valid)[:, 1])
+print("Average precision of logistic regression: {:.3f}".format(ap_lr))
+```
+
+#### AP vs. F1-Score
+
+It is very important to note this distinction:
+
+- F1 score is for a given threshold and measures the quality of `predict`.
+- AP score is a summary across thresholds and measures the quality of `predict_proba`.
+
+### Receiver Operating Characteristic (ROC) curve
+
+Another commonly used tool to analyze the behavior of classifiers at different thresholds.
+
+Similar to PR curve, it considers all possible thresholds for a given classifier given by `predict_proba` but instead of precision and recall it plots false positive rate (FPR) and true positive rate (TPR or recall).
+$$
+FPR = \frac{FalsePositives}{FalsePositives + TrueNegatives}
+$$
+
+$$
+TPR = \frac{TruePositives}{TruePositives + FalsePositives}
+$$
+
+#### Area under the curve (AUC)
+
+AUC provides a single meaningful number for the model performance.
+
+- AUC of 0.5 means random chance.
+- AUC can be interpreted as evaluating the **ranking** of positive examples.
+- What’s the probability that a randomly picked positive point has a higher score according to the classifier than a randomly picked point  from the negative class.
+- AUC of 1.0 means all positive points have a higher score than all negative points.
+
+For classification problems with imbalanced classes, using AP score or AUC is often much more meaningful than using accuracy.
+
+## Dealing with Class Imbalance
+
+ A very important question to ask yourself: “Why do I have a class imbalance?”
+
+- Is it because one class is much more rare than the other?
+  - If it’s just because one is more rare than the other, you need to ask whether you care about one type of error more than the other.
+- Is it because of my data collection methods?
+  - If it’s the data collection, then that means *your test and training data come from different distributions*!
+
+In some cases, it may be fine to just ignore the class imbalance.
+
+### Handling imbalance
+
+Can we change the model itself rather than changing the threshold so  that it takes into account the errors that are important to us?
+
+There are two common approaches for this:
+
+- **Changing the data (optional)** (not covered in this course)
+  - Undersampling
+  - Oversampling
+    - Random oversampling
+    - SMOTE
+- **Changing the training procedure**
+  - `class_weight`
+
+### Changing the training procedure
+
+- All `sklearn` classifiers have a parameter called `class_weight`.
+- This allows you to specify that one class is more important than another.
+- For example, maybe a false negative is 10x more problematic than a false positive.
+- Changing the class weight will **generally reduce accuracy**.
+  - The original model was trying to maximize accuracy.
+  - Now you’re telling it to do something different.
+  - But that can be fine, accuracy isn’t the only metric that matters.
+
+A useful setting is `class_weight="balanced"`.
+
+- This sets the weights so that the classes are “equal”.
 
 ## Learning Objectives
 
@@ -1213,7 +1801,53 @@ print(
 
 # 10: Regression Metrics
 
+We aren’t doing classification anymore, so we can’t just check for equality. We need a score that reflects how right/wrong each prediction is.
 
+A number of popular scoring functions for regression. We are going to look at some common metrics:
+
+- mean squared error (MSE)
+- R<sup>2</sup>
+- root mean squared error (RMSE)
+- MAPE
+
+## Mean Squared Error (MSE)
+
+Unlike classification, with regression **our target has units**. The score also depends on the scale of the targets. 
+
+* ex: If we were working in cents instead of dollars, our MSE would be be 10,000 times higher (100<sup>2</sup>)
+
+### Root Mean Squared Error (RMSE)
+
+A more relatable metric would be the root mean squared error, or RMSE.
+
+* Unfortunately outliers through both MSE and RMSE way off
+
+## R<sup>2</sup>
+
+This is the score that `sklearn` uses by default when you call score():
+
+* similar to mean squared error, but flipped (higher is better)
+* normalized so the max is 1.
+* Negative values are very bad: “worse than `DummyRegressor`” (very bad)
+
+## MAPE
+
+How about looking at percent error?
+
+```python
+pred_train = lr_tuned.predict(X_train)
+percent_errors = (pred_train - y_train) / y_train * 100.0
+np.abs(percent_errors) # absolute percent error
+
+def mape(true, pred):
+    return 100.0 * np.mean(np.abs((pred - true) / true))
+```
+
+Like MSE, we can take the average over examples. This is called mean absolute percent error (MAPE).
+
+* this is quite interpretable.
+
+* On average, we have around x% error.
 
 ## Learning Objectives
 
@@ -1229,7 +1863,191 @@ print(
 
 # 11: Ensembles
 
+**Ensembles** are models that combine multiple machine learning models to create more powerful models.
 
+Decision trees models are
+
+- Interpretable
+- They can capture non-linear relationships
+- They don’t require scaling of the data and theoretically can work with categorical features.
+
+But with a single decision, trees are likely to overfit.
+
+**Key idea**: Combine multiple trees to build stronger models.
+
+- These kinds of models are extremely popular in industry and machine learning competitions
+
+## Random Forests
+
+Use a collection of diverse decision trees. Each tree overfits on some part of the data but we can reduce overfitting by averaging the results.
+
+- can be shown mathematically
+
+How?:
+
+1. Decide how many decision trees we want to build
+   * can control with `n_estimators` hyperparameter
+2. `fit` a diverse set of that many decision trees by **injecting randomness** in the classifier construction
+3. `predict` by voting (classification) or averaging (regression) of predictions given by individual models
+
+What does it do?:
+
+1. Create a collection (ensemble) of trees. Grow each tree on an independent bootstrap sample from the data.
+2. At each node:
+   * Randomly select a subset of features out of all features (independently for each node).
+   * Find the best split on the selected features.
+   * Grow the trees to maximum depth.
+
+3. Prediction time
+   * Vote the trees to get predictions for new example.
+
+### Injecting Randomness
+
+To ensure that the trees in the random forest are different we inject randomness in two ways:
+
+1. Data: **Build each tree on a bootstrap sample** (i.e., a sample drawn **with replacement** from the training set)
+2. Features: **At each node, select a random subset of features** (controlled by `max_features` in `scikit-learn`) and look for the best possible test involving one of these features
+
+### Hyperparameters
+
+- `n_estimators`: number of decision trees (higher = more complexity)
+- `max_depth`: max depth of each decision tree (higher = more complexity)
+- `max_features`: the number of features you get to look at each split (higher = more complexity)
+
+#### Number of trees and fundamental trade-off
+
+- Above: seems like we’re beating the fundamental “tradeoff” by  increasing training score and not decreasing validation score much.
+- This is the promise of ensembles, though it’s not guaranteed to work so nicely.
+
+More trees are always better! We pick less trees for speed.
+
+### Strengths and Weaknesses
+
+Strengths:
+
+- Usually one of the best performing off-the-shelf classifiers without heavy tuning of hyperparameters
+- Don’t require scaling of data
+- Less likely to overfit
+- Slower than decision trees because we are fitting multiple trees  but can easily parallelize training because all trees are independent of each other
+- In general, able to capture a much broader picture of the data compared to a single decision tree.
+
+Weaknesses:
+
+- Require more memory
+- Hard to interpret
+- Tend not to perform well on high dimensional sparse data such as text data
+
+Make sure to set the `random_state` for reproducibility. Changing the `random_state` can have a big impact on the model and the results due to the random  nature of these models. Having more trees can get you a more robust  estimate.
+
+## Gradient Boosted Trees
+
+Another popular and effective class of tree-based models is gradient boosted trees.
+
+- No randomization.
+- The key idea is combining many simple models called weak learners to create a strong learner.
+- They combine multiple shallow (depth 1 to 5) decision trees
+- They build trees in a serial manner, where each tree tries to correct the mistakes of the previous one.
+
+### Hyperparameters
+
+`n_estimators`
+
+- control the number of trees to build
+
+`learning_rate`
+
+- controls how strongly each tree tries to correct the mistakes of the previous trees
+- higher learning rate means each tree can make stronger corrections, which means more 
+
+### Models
+
+We’ll not go into the details. We’ll look at brief examples of using the following three gradient boosted tree models.
+
+- [XGBoost](https://xgboost.readthedocs.io/en/latest/)
+- [LightGBM](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html)
+- [CatBoost](https://catboost.ai/docs/concepts/python-quickstart.html)
+
+#### [XGBoost](https://xgboost.ai/about)
+
+- Not part of `sklearn` but has similar interface.
+- Install it in your conda environment: `conda install -c conda-forge xgboost`
+- Supports missing values
+- GPU training, networked parallel training
+- Supports sparse data
+- Typically better scores than random forests
+
+#### [LightGBM](https://lightgbm.readthedocs.io/)
+
+- Not part of `sklearn` but has similar interface.
+- Install it in your conda environment: `conda install -c conda-forge lightgbm`
+- Small model size
+- Faster
+- Typically better scores than random forests
+
+#### [CatBoost](https://catboost.ai/)
+
+- Not part of `sklearn` but has similar interface.
+- Install it in your conda environment: `conda install -c conda-forge catboost`
+- Usually better scores but slower compared to `XGBoost` and `LightGBM`
+
+## Averaging
+
+Earlier we looked at a bunch of classifiers. What if we use all these models and let them vote during prediction time?
+
+This `VotingClassifier` will take a *vote* using the predictions of the constituent classifier pipelines.
+
+Main parameter: `voting`
+
+- `voting='hard'`
+  - it uses the output of `predict` and actually votes.
+- `voting='soft'`
+  - with `voting='soft'` it averages the output of `predict_proba` and then thresholds / takes the larger.
+
+- The choice depends on whether you trust `predict_proba` from your base classifiers - if so, it’s nice to access that information.
+
+What happens when you `fit` a `VotingClassifier`?
+
+- It will fit all constituent models.
+
+In short, as long as the different models make different mistakes, this can work.
+
+Why not always do this?
+
+1. `fit`/`predict` time.
+2. Reduction in interpretability.
+3. Reduction in code maintainability (e.g. Netflix prize).
+
+You can combine
+
+- completely different estimators, or similar estimators.
+- estimators trained on different samples.
+- estimators with different hyperparameter values.
+
+## Stacking
+
+Instead of averaging the outputs of each estimator, instead use their outputs as *inputs to another model*.
+
+By default for classification, it uses logistic regression.
+
+- We don’t need a complex model here necessarily, more of a weighted average.
+- The features going into the logistic regression are the classifier outputs, *not* the original features!
+- So the number of coefficients = the number of base estimators!
+
+It is doing cross-validation by itself by default (see [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html))
+
+- It is fitting the base estimators on the training fold
+- And the predicting on the validation fold
+- And then fitting the meta-estimator on that output (on the validation fold)
+
+Randomly generate a bunch of models with different hyperparameter configurations, and then stack all the models.
+
+What is an advantage of ensembling multiple models as opposed to just choosing one of them?
+
+- You may get a better score.
+
+What is an disadvantage of ensembling multiple models as opposed to just choosing one of them?
+
+- Slower, more code maintenance issues.
 
 ## Learning Objectives
 
@@ -1285,8 +2103,6 @@ In this course our definition of model interpretability is **feature importance*
 Feature importance does not have a sign!
 
 * Only tells us about importance, nothing about up or down.
-
-
 
 ### Shapley Additive Explanations (SHAP)
 

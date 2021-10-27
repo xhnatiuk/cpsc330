@@ -6,6 +6,8 @@ from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.ensemble import RandomForestClassifier
 
 def plot_tree_decision_boundary(
     model, X, y, x_label="x-axis", y_label="y-axis", eps=None, ax=None, title=None
@@ -317,3 +319,86 @@ def plot_logistic_regression(x, w):
         lr_graph.edge(x[i], "y_hat=%s" %sentiment, label=str(w[i]))
     return lr_graph    
     
+def plot_confusion_matrix_ex(tn, fp, fn, tp, target='Fraud'):
+    plt.figure(figsize=(7, 7))
+    confusion = np.array([[tn, fp], [fn, tp]])
+    plt.text(0.40, .7, confusion[0, 0], size=45, horizontalalignment='right')
+    plt.text(0.40, .2, confusion[1, 0], size=45, horizontalalignment='right')
+    plt.text(.90, .7, confusion[0, 1], size=45, horizontalalignment='right')
+    plt.text(.90, 0.2, confusion[1, 1], size=45, horizontalalignment='right')
+    plt.xticks([.25, .75], ["predicted not " + target, "predicted " + target], size=20, rotation=25)
+    plt.yticks([.25, .75], ["true " + target, "true not " + target ], size=20)
+    plt.plot([.5, .5], [0, 1], '--', c='k')
+    plt.plot([0, 1], [.5, .5], '--', c='k')
+
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
+    
+
+def plot_confusion_matrix_example(tn, fp, fn, tp, target='Fraud'):
+    fig, ax = plt.subplots(1, 2, figsize=(20, 6), subplot_kw={'xticks': (), 'yticks': ()})
+
+    plt.setp(ax, xticks=[.25, .75], xticklabels=["predicted not " + target, "predicted " + target],
+       yticks=[.25, .75], yticklabels=["true " + target, "true not " + target ])    
+    confusion = np.array([[tn, fp], [fn, tp]])
+    ax[0].text(0.40, .7, confusion[0, 0], size=45, horizontalalignment='right')
+    ax[0].text(0.40, .2, confusion[1, 0], size=45, horizontalalignment='right')
+    ax[0].text(.90, .7, confusion[0, 1], size=45, horizontalalignment='right')
+    ax[0].text(.90, 0.2, confusion[1, 1], size=45, horizontalalignment='right')
+    ax[0].plot([.5, .5], [0, 1], '--', c='k')
+    ax[0].plot([0, 1], [.5, .5], '--', c='k')
+
+    ax[0].set_xlim(0, 1)
+    ax[0].set_ylim(0, 1)    
+    
+    ax[1].text(0.45, .6, "TN", size=100, horizontalalignment='right')
+    ax[1].text(0.45, .1, "FN", size=100, horizontalalignment='right')
+    ax[1].text(.95, .6, "FP", size=100, horizontalalignment='right')
+    ax[1].text(.95, 0.1, "TP", size=100, horizontalalignment='right')
+    ax[1].plot([.5, .5], [0, 1], '--', c='k')
+    ax[1].plot([0, 1], [.5, .5], '--', c='k')
+    ax[1].yaxis.set_tick_params(labelsize=12)
+    ax[1].set_xlim(0, 1)
+    ax[1].set_ylim(0, 1)  
+    
+def make_num_tree_plot(preprocessor, X_train, y_train, X_test, y_test, num_trees, scoring_metric='accuracy'):
+    """
+    Make number of trees vs error rate plot for RandomForestClassifier
+
+    Parameters
+    ----------
+    model: sklearn classifier model
+        The sklearn model
+    X_train: numpy.ndarray
+        The X part of the train set
+    y_train: numpy.ndarray
+        The y part of the train set
+    X_test: numpy.ndarray
+        The X part of the test/validation set
+    y_test: numpy.ndarray
+        The y part of the test/validation set
+    num_trees: int
+        The value for `n_estimators` argument of RandomForestClassifier
+    Returns
+    -------
+        None
+        Shows the number of trees vs error rate plot
+
+    """
+    train_scores = []
+    test_scores = []
+    for ntree in num_trees:
+        model = make_pipeline(preprocessor, RandomForestClassifier(n_estimators=ntree))
+        scores = cross_validate(
+            model, X_train, y_train, return_train_score=True, scoring=scoring_metric
+        )
+        train_scores.append(np.mean(scores["train_score"]))
+        test_scores.append(np.mean(scores["test_score"]))
+
+    plt.semilogx(num_trees, train_scores, label="train")
+    plt.semilogx(num_trees, test_scores, label="cv")
+    plt.legend()
+    plt.xlabel("number of trees")
+    plt.ylabel("scores") 
+
+        

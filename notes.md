@@ -1389,7 +1389,7 @@ One of the primary advantage of linear classifiers is their ability to interpret
 
 # 8: Hyperparameter Optimization & Overfitting
 
-In order to improve the generalization performance, finding the best  values for the important hyperparameters of a model is necessary for  almost all models and datasets. Picking good hyperparameters is important because if we don’t do it, we might end up with an underfit or overfit model.
+In order to improve the generalization performance, finding the best  values for the important hyperparameters of a model is necessary for almost all models and datasets. Picking good hyperparameters is important because if we don’t do it, we might end up with an underfit or overfit model.
 
 Manual or expert knowledge or heuristics based optimization
 
@@ -1529,6 +1529,20 @@ Optimization Bias of Hyperparameter Learning: Overfitting of the validation erro
 
 This is why we need a test set. The frustrating part is that if our dataset is small then our test set is also small 😔.
 
+
+
+If your test score is much lower than your CV score:
+
+* Try simpler models and use the test set a couple of times
+* Communicate clearly when you report your results
+
+Large datasets solve many problems. 
+
+* This infinite training data overfitting would not be a problem. Theoretically you  could have test score = train score.
+* Overfitting happens because you only see a bit of data and you learn patterns that are overly specific to the sample.
+* If you could see all the data the notion of overly specific would not apply.
+* More data will make our test scores better and more robust
+
 ## Learning Objectives
 
 - explain the need for hyperparameter optimization
@@ -1571,7 +1585,9 @@ Two kinds of binary classification problems:
 
 In case of spotting problems, the thing that we are interested in spotting is considered “positive”.
 
-## Precision, Recall, f1 Score
+Note that what you consider as positive is important, if you flip what is considered to be positive and what is to be considered negative, we will end up with different TP, FP, TN, FN, and therefore different precision , recall, and f1 scores. 
+
+## Precision, Recall, F1 Score 
 
 We have been using `.score` to assess our models, which returns accuracy by default.
 
@@ -1584,27 +1600,25 @@ We’ll discuss three commonly used metrics which are based on confusion matrix:
 2. precision
 3. f1 score
 
-Note that these metrics will only help us assessing our model.
-
-`scikit-learn` has functions for [these metrics](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics).
+Note that these metrics will only help us assessing our model.`scikit-learn` has functions for [these metrics](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics).
 
 ### Recall
 
 Among all positive examples, how many did you identify?
 $$
-recall = \frac{TruePositives}{TruePositives + FalseNegatives}
+recall = \frac{TruePositives}{TruePositives + FalseNegatives} = \frac{TruePositives}{\#OfPositives}
 $$
 
 ### Precision
 
 Among the positive examples you identified, how many were actually positive?
 $$
-precision = \frac{TruePositives}{TruePositives + FalsePositives}
+precision = \frac{TruePositives}{TruePositives + FalsePositives} = \frac{TruePositives}{TotalPredictedPositives}
 $$
 
-### f1 Score
+### F1 Score
 
-F1-score combines precision and recall to give one score, which could be used in hyperparameter optimization, for instance.
+F1-score combines precision and recall to give one score, which could be used in hyperparameter optimization.
 
 * F1-score is a harmonic mean of precision and recall.
 
@@ -1647,6 +1661,8 @@ You give equal importance to all classes and average over all classes.
 * More relevant in case of multi-class problems.
 
 #### Weighted Average
+
+You give equal importance to each example. 
 
 - Weighted by the number of samples in each class.
 - Divide by the total number of samples.
@@ -1754,12 +1770,16 @@ For classification problems with imbalanced classes, using AP score or AUC is of
 
 - Is it because one class is much more rare than the other?
   - If it’s just because one is more rare than the other, you need to ask whether you care about one type of error more than the other.
+  - We need to address class imbalance
 - Is it because of my data collection methods?
   - If it’s the data collection, then that means *your test and training data come from different distributions*!
+  - We need to address class imbalance
 
 In some cases, it may be fine to just ignore the class imbalance.
 
 ### Handling imbalance
+
+Depending on which kind of error is more important, we can pick a threshold that is appropriate for our problem.
 
 Can we change the model itself rather than changing the threshold so  that it takes into account the errors that are important to us?
 
@@ -1786,6 +1806,26 @@ There are two common approaches for this:
 A useful setting is `class_weight="balanced"`.
 
 - This sets the weights so that the classes are “equal”.
+
+### Stratified Splits
+
+A similar idea of “balancing” classes can be applied to data splits.
+
+- We have the same option in `train_test_split` with the `stratify` argument.
+- By default it splits the data so that if we have 10% negative  examples in total, then each split will have 10% negative examples.
+
+- If you are carrying out cross validation using `cross_validate`, by default it uses [`StratifiedKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html). From the documentation:
+
+> This cross-validation object is a variation of KFold that  returns stratified folds. The folds are made by preserving the  percentage of samples for each class.
+
+- In other words, if we have 10% negative examples in total, then each fold will have 10% negative examples.
+
+Is this a good idea?:
+
+- Well, it’s no longer a random sample, which is probably theoretically bad, but not that big of a deal.
+- If you have many examples, it shouldn’t matter as much.
+- It can be especially useful in multi-class, say if you have one class with very few cases.
+- In general, these are difficult questions.
 
 ## Learning Objectives
 
@@ -1957,7 +1997,7 @@ Another popular and effective class of tree-based models is gradient boosted tre
 `learning_rate`
 
 - controls how strongly each tree tries to correct the mistakes of the previous trees
-- higher learning rate means each tree can make stronger corrections, which means more 
+- higher learning rate means each tree can make stronger corrections, which means more complex model
 
 ### Models
 
@@ -1969,8 +2009,8 @@ We’ll not go into the details. We’ll look at brief examples of using the fol
 
 #### [XGBoost](https://xgboost.ai/about)
 
-- Not part of `sklearn` but has similar interface.
-- Install it in your conda environment: `conda install -c conda-forge xgboost`
+Not part of `sklearn` but has similar interface. Install it in your conda environment: `conda install -c conda-forge xgboost`.
+
 - Supports missing values
 - GPU training, networked parallel training
 - Supports sparse data
@@ -1978,16 +2018,16 @@ We’ll not go into the details. We’ll look at brief examples of using the fol
 
 #### [LightGBM](https://lightgbm.readthedocs.io/)
 
-- Not part of `sklearn` but has similar interface.
-- Install it in your conda environment: `conda install -c conda-forge lightgbm`
+Not part of `sklearn` but has similar interface. Install it in your conda environment: `conda install -c conda-forge lightgbm`.
+
 - Small model size
 - Faster
 - Typically better scores than random forests
 
 #### [CatBoost](https://catboost.ai/)
 
-- Not part of `sklearn` but has similar interface.
-- Install it in your conda environment: `conda install -c conda-forge catboost`
+Not part of `sklearn` but has similar interface. Install it in your conda environment: `conda install -c conda-forge catboost`.
+
 - Usually better scores but slower compared to `XGBoost` and `LightGBM`
 
 ## Averaging
@@ -2041,11 +2081,11 @@ It is doing cross-validation by itself by default (see [documentation](https://s
 
 Randomly generate a bunch of models with different hyperparameter configurations, and then stack all the models.
 
-What is an advantage of ensembling multiple models as opposed to just choosing one of them?
+What is an advantage of ensemble models as opposed to just choosing one of them?
 
 - You may get a better score.
 
-What is an disadvantage of ensembling multiple models as opposed to just choosing one of them?
+What is an disadvantage of ensemble   models as opposed to just choosing one of them?
 
 - Slower, more code maintenance issues.
 

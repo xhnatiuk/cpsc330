@@ -2162,3 +2162,124 @@ Smaller SHAP values mean that we are less likely to get placed in the target cla
 * Use `eli5` to get feature importance of non `sklearn` models and interpret its output.
 * Apply SHAP to assess feature importance and interpret model predictions.
 * Explain force plot, summary plot, and dependence plot produced with shapely values.
+
+
+
+# 13: Feature Engineering
+
+Better features -> more flexibility, higher score. We can get simple and interpretable models.
+
+If your features i.e. representation is bad, whatever model you build is not going to help.
+
+> Feature engineering is the process of transforming raw data into features that better represent the underlying problem to the predictive models, resulting in improved model accuracy on unseen data. 
+>
+> -Jason Brownlee
+
+Better features usually help more than a better model. Good features ideally:
+
+* capture most important aspects of the problem
+* allow learning with few examples
+* generalize to new scenarrios
+
+There is a trade-off between simple and expressive features
+
+* simple features have a low overfitting risk, but scores might be low
+* more complicated features 
+
+In some domains there are natural transformations to do: 
+
+* 
+
+Feature engineering is super domain specific so it is hard to provide generalized knowledge
+
+
+
+How do we extract parts-of-speech information? We use pre-trained models. 
+
+* Popular libraries include: `nltk`, `spaCy`
+
+
+
+If we want to go beyond bag-of-words and incorporate human knowledge in models, we carry out feature engineering. 
+
+
+
+
+
+Feature Selection
+
+Increases interpretability: no reason to use more features if it doesn't improve our performance. 
+
+Computation: models fit/predict faster with fewer columns
+
+Data collection: may be cheaper with fewer features
+
+
+
+How do we select features? 
+
+We can use domain knowledge to discard features. We are going to look briefly at three automatic feature selection methods in `sklearn`: 
+
+* Model-based selection
+* Recursive feature elimination
+* Forward selection
+
+These are related to looking at feature importance
+
+
+
+Model-based selection
+
+* 
+
+
+
+Recursive feature elimination (RFE) 
+
+* build a series of models
+* At each iteration, discard the least important feature according to the model
+* Computationally expenseive
+
+
+
+REF algorithm:
+
+1. Decide l, the number of features to select
+2. Assign importance to features (i.e. fit and remove lowest magnitude coefficient in regression)
+3. Remove least important feature
+4. Repeat until only k features are remaining
+
+This is NOT the same as removing the k least important features all at once
+
+
+
+General idea of search and score methods. 
+
+* We try each member of the powerset of our features in an exhaustive search
+* Too computationally expensive
+
+Forward or backward selection:
+
+* Also called wrapper methods
+* Shrink or grow feature set by removing or adding one feature at a time
+* Makes the decision based on whether adding/removing the feature improves the CV score or not 
+
+
+
+Other ways to search
+
+* Stochastic local serach
+
+
+
+Warnings regarding feature selection
+
+* A features relevance is only defined in the context of other features
+  * Adding/removing features can make features relevant/irrelevant
+* If features can be predicted from other features, you cannot know which one to pick
+* Relevance for features does not have to be a causal relationship
+
+
+
+Call peace arch crossing...
+

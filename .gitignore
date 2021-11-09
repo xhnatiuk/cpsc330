@@ -4,3 +4,5 @@ lectures/data/*
 deleted.ipynb
 */catboost_info/*
 ./exams
+cache/*
+__pycache__/*

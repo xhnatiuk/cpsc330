@@ -30,8 +30,8 @@ Usually the homework assignments will be due on Mondays (except next week) and w
 | **Midterm** | Oct 28, during class time|[Canvas](https://canvas.ubc.ca/courses/78046) | [Canvas](https://canvas.ubc.ca/courses/78046) | 
 | hw6 | Nov 15, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
 | hw7 | ~~Nov 15, 11:59pm~~ <br> Nov 17, 11:59pm  |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
-| hw8 | Nov 29, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
-| **Final exam** | TBD | [Canvas](https://canvas.ubc.ca/courses/78046) | [Canvas](https://canvas.ubc.ca/courses/78046) |
+| hw8 | Dec 07, 11:59pm |   [Github repo](https://github.com/UBC-CS/cpsc330/tree/master/hw/) | [Gradescope](https://www.gradescope.ca/courses/5032)|  
+| **Final exam** | Dec. 19th at noon at PHRM 1101 | [Canvas](https://canvas.ubc.ca/courses/78046) | [Canvas](https://canvas.ubc.ca/courses/78046) |
 
 
 
@@ -74,19 +74,15 @@ Usually the homework assignments will be due on Mondays (except next week) and w
 |  | **Part II: Unsupervised learning, transfer learning, different learning settings**  | | 
 | Nov 4 |   [Clustering](lectures/14_k-means-clustering.ipynb) |  📹 <li>Pre-watch: [14.1](https://youtu.be/caAuUAXwpb8),[14.2](https://youtu.be/s6AvSZ1_l7I),[14.3](https://youtu.be/M5ilrhcL0oY)</li>  | less depth |
 |        |  | **Week 10 datasets**: <li>[Jester 1.7M jokes ratings dataset](https://www.kaggle.com/vikashrajluhaniwal/jester-17m-jokes-ratings-dataset)</li> |
-| Nov 9 |   Simple recommender systems | | less depth ||
+| Nov 9 |   [Simple recommender systems](lectures/15_recommender-systems.ipynb) | | less depth ||
 | Nov 11 | _Midterm break - no class_  |  |
-|        |     | **Week 11 datasets**: <li></li> | |
-| Nov 16 |  Text data, embeddings, topic modeling  | 📹 <li>Pre-watch: [16.1](https://youtu.be/GTC_iLPCjdY),[16.2](https://youtu.be/7W5Q8gzNPBc)</li>  |   new |
-| Nov 18 | Neural networks and computer vision | |   less depth |
-|        |     | **Week 12 datasets**: <li></li> | |
-| Nov 23 | Time series data |  | new |
-| Nov 25 | Survival analysis |  |   new |
+| Nov 16 |  [Text data, embeddings, topic modeling](lectures/16_natural-language-processing.ipynb)  | 📹 <li>Pre-watch: [16.1](https://youtu.be/GTC_iLPCjdY),[16.2](https://youtu.be/7W5Q8gzNPBc)</li>  |   new |
+| Nov 18 | [Neural networks and computer vision](lectures/17_intro_to_computer-vision.ipynb) | |   less depth |
+| Nov 23 | [Time series data](lectures/18_time-series.ipynb) | (Optional) [Humour: The Problem with Time & Timezones](https://www.youtube.com/watch?v=-5wpm-gesOY) | new |
+| Nov 25 | [Survival analysis](lectures/19_survival-analysis.ipynb) | 📹 (Optional but highly recommended)[Calling Bullshit 4.1: Right Censoring](https://www.youtube.com/watch?v=ITWQ5psx9Sw)|   new |
 |  | **Part III: Communication, ethics, deployment**  | |
-|        |     | **Week 13 datasets**: <li></li> | |
-| Nov 30 | Communication |  |   new |
-| Dec 2 |  Ethics |  | new |
-|        |     | **Week 14 datasets**: <li></li> | |
+| Nov 30  |  [Ethics](lectures/20_ethics.ipynb) |   📹 (Optional but highly recommended) <li>[Calling BS videos](https://www.youtube.com/playlist?list=PLPnZfvKID1Sje5jWxt-4CSZD7bUI4gSPS) Chapter 5 (6 short videos, 50 min total)</li> <li>[The ethics of data science](http://jtleek.com/ads2020/week-15.html)</li>| new |
+| Dec 2 | [Communication](lectures/21_communication.ipynb) | 📹 (Optional but highly recommended) <li>[Calling BS videos](https://www.youtube.com/playlist?list=PLPnZfvKID1Sje5jWxt-4CSZD7bUI4gSPS) Chapter 6 (6 short videos, 47 min total)</li> <li>[Can you read graphs? Because I can't.](https://www.youtube.com/watch?v=vbDObzI-CTc) by Sabrina (7 min)</li> |   new |
 | Dec 7 | Model deployment and conclusion |  |  new |
 
 

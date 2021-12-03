@@ -12,8 +12,6 @@ The following code can be used to count the different values that occur in our t
 
 * `sklearn`'s baseline model for regression is `DummyRegressor` which predicts mean, median, or constant value of the training set for all examples. 
 
-
-
 Steps to train a classifier using `sklearn`:
 
 1. Read the data
@@ -42,8 +40,6 @@ $$
 2. For regression problems, `score` returns the R<sup>2</sup> score. Its maximum is 1 for perfect predictions, negative means the model is performing really badly, and for the `DummyRegressor` it will be close to 0. 
 
 Sometimes people will measure **error** which is generally `1 - accuracy`. 
-
-
 
 ## Terminology
 
@@ -83,8 +79,6 @@ In supervised machine learning, there are two main types of learning problems ba
    * Ex: Predict whether a patient has a disease or not
 2. **Regression**: predicting a continuous value
    * Ex: Predict housing prices
-
-
 
 ## Decision Trees
 
@@ -160,8 +154,6 @@ When you call `fit` a bunch of values get set, such as the ones listed above. Th
 
 **Hyperparameters**: the parameters you can set to control the training, set before calling `fit`. Specified based on: expert knowledge, heuristics, or systematic/automated optimization. 
 
-
-
 When we use the default hyperparameters for the decision tree classifier, it will ensure all leaf nodes are pure. We can control this using the `max_depth` hyperparameter, which is the length of the longest path from tree root to a leaf.
 
 * When a leaf node has no impurity, all of the data that reaches it will be labeled as one class. 
@@ -176,8 +168,6 @@ Some other commonly used hyperparameters of a decision tree are:
 * `max_leaf_nodes`
 
 There are many more and they are outlined in the documentation. 
-
-
 
 ### Decision Boundary
 
@@ -230,21 +220,31 @@ As we increase our `max_depth` our model and our decision boundary get more comp
 ## Learning Objectives
 
 - explain the motivation to study machine learning;
+
 - explain supervised machine learning;
 
-
-
 - identify whether a given problem could be solved using supervised machine learning or not;
+
 - differentiate between supervised and unsupervised machine learning;
+
 - explain machine learning terminology such as features, targets, predictions, training, and error;
+
 - differentiate between classification and regression problems;
+
 - use `DummyClassifier` and `DummyRegressor` as baselines for machine learning problems;
+
 - explain the `fit` and `predict` paradigm and use `score` method of ML models;
+
 - broadly describe how decision tree prediction works;
+
 - use `DecisionTreeClassifier` and `DecisionTreeRegressor` to build decision trees using `scikit-learn`;
+
 - visualize decision trees;
+
 - explain the difference between parameters and hyperparameters;
+
 - explain the concept of decision boundaries;
+
 - explain the relation between model complexity and decision boundaries.
 
 # 3: ML Fundamentals
@@ -257,7 +257,7 @@ The fundamental goal of machine learning is **generalization**:
 
 We only have access to a limited amount of training data and we want to learn a mapping function which will predict targets reasonably well for examples beyond this data. 
 
- ## Types of Errors
+## Types of Errors
 
 Given a model M, we are concerned about two different types of errors:
 
@@ -288,7 +288,6 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=123
 )  # 80%-20% train test split on X and y
-
 ```
 
 Usually when we do machine learning, we split the data before doing anything and put the test data in an imaginary chest lock - we do not touch it while we are training our model. 
@@ -439,7 +438,6 @@ If your model is very complex, like a `DecisionTreeClassifier(max_depth=None)`, 
 * The training error is going to be very low but there will be a  big gap between the training error and the validation error. This is **overfitting**.
 
 * In general, if E<sub>train</sub> is low, we are likely to be in the overfitting scenario. It is fairly common to have at least a bit of this.
-
 - So the validation error does not necessarily decrease with the training error.
 
 Generally:
@@ -460,8 +458,6 @@ We can avoid violating the golden rule by separating our test data early on and 
 2. Select the best model using cross-validation: use `cross_validate` to check validation and training scores/error
 3. Scoring on Test Data: finally score on the test data with the chosen hyperparameters to examine the generalization performance.
 
-
-
 ## Learning Objectives
 
 - explain how decision boundaries change with the `max_depth` hyperparameter;
@@ -475,8 +471,6 @@ We can avoid violating the golden rule by separating our test data early on and 
 - describe the fundamental tradeoff between training score and the train-test gap;
 - state the golden rule;
 - start to build a standard recipe for supervised learning:  train/test split, hyperparameter tuning with cross-validation, test on  test set.
-
-
 
 # 4: k-NNs and SVM with RBF Kernel
 
@@ -514,7 +508,7 @@ This is the second most important problem in machine learning, after over/underf
 - If there are many irrelevant attributes, k-NN is hopelessly confused because all of them contribute to finding similarity between examples.
 - With enough irrelevant attributes the accidental similarity swamps out meaningful similarity and k-NN is no better than random guessing.
 
-## k-nearest neighbors algorithm 
+## k-nearest neighbors algorithm
 
 Given a new data point, predict the class of the point by finding the k "closest" data points in the training set.
 
@@ -578,7 +572,6 @@ Another popular similarity based algorithm is SVM RBFs.  Superficially, SVM RBFs
 The primary difference between k-NNs and SVM RBFs is that
 
 - Unlike k-NNs, SVM RBFs only remember the key examples (support vectors). So it’s more efficient than k-NN.
-
 * SVMs use a different similarity metric which is called a “kernel” in SVM land. A popular kernel is Radial Basis Functions (RBFs)
 
 * They usually perform better than k-NNs!
@@ -594,9 +587,10 @@ print("Mean validation score %0.3f" % (np.mean(scores["test_score"])))
 We can think of SVM with RBF kernel as KNN with a smooth decision boundary.
 
 - Each training example either is or isn’t a “support vector”.
+  
   - This gets decided during `fit`.
-- **Main insight**: the decision boundary only depends on the support vectors.
 
+- **Main insight**: the decision boundary only depends on the support vectors.
 * We can examine the support vectors for the model using `svm.support`
 
 ### Hyperparameters
@@ -604,13 +598,11 @@ We can think of SVM with RBF kernel as KNN with a smooth decision boundary.
 `gamma` controls the complexity (fundamental trade-off), just like other hyperparameters we’ve seen.
 
 - larger `gamma` means more complex
-
 * smaller `gamma` means less complex
 
 `C` *also* affects the fundamental tradeoff
 
 - larger `C` means more complex
-
 * smaller `C` means less complex
 
 Because we have more than one hyperparameter we need new methods to test combinations of hyperparameters to find our optimized model. 
@@ -738,9 +730,9 @@ X_test_imp = imputer.transform(X_test)
 - This problem affects a large number of ML methods.
 - A number of approaches to this problem. We are going to look into two most popular ones.
 
-| Approach        | What it does                     | How to update X                                        | sklearn implementation                                       |
-| --------------- | -------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
-| normalization   | sets range to [0, 1]             | `X-= np.min(X, axis=0)`<br />`X /= np.max(X, axis=0)`  | [`MinMaxScaler()`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html) |
+| Approach        | What it does                     | How to update X                                        | sklearn implementation                                                                                                                                 |
+| --------------- | -------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| normalization   | sets range to [0, 1]             | `X-= np.min(X, axis=0)`<br />`X /= np.max(X, axis=0)`  | [`MinMaxScaler()`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html)                                          |
 | standardization | sets sample mean to 0, s.d. to 1 | `X-= np.mean(X, axis=0)`<br />`X /= np.std(X, axis=0)` | [`StandardScaler()`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler) |
 
 ```python
@@ -749,7 +741,6 @@ scaler = StandardScaler() # or = MinMaxScaler
 X_train_scaled = scaler.fit_transform(X_train_imp)
 X_test_scaled = scaler.transform(X_test_imp)
 pd.DataFrame(X_train_scaled, columns=X_train.columns)
-
 ```
 
 * `fit_transform` combines the fit and the transform step. We can use this safely on our train data but DO NOT use it on your test data. 
@@ -833,7 +824,7 @@ We can transform categorical features to numeric ones so that we can use them in
 * [Ordinal encoding](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html) (occasionally recommended)
 * One-hot encoding (recommended in most cases)
 
-### Ordinal Encoding 
+### Ordinal Encoding
 
 Here we simply assign an integer to each of our unique categorical labels. We can use sklearn’s [`OrdinalEncoder`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html).
 
@@ -889,6 +880,7 @@ We can pass the manually ordered categories when we create an `OrdinalEncoder` o
 Create new binary columns to represent our categories.
 
 * If we have c categories in our column.
+  
   * We create c new binary columns to represent those categories.
 
 * Example: Imagine a language column which has the information on whether you
@@ -1222,9 +1214,10 @@ from sklearn.linear_model import Ridge  # USE THIS INSTEAD
 Ridge has hyperparameters just like the rest of the models we learned.
 
 - The alpha hyperparameter is what makes `Ridge` different from vanilla `LinearRegression`.
-- Similar to the other hyperparameters that we saw, `alpha` controls the fundamental tradeoff.
-- If we set alpha=0 that is the same as using `LinearRegression`.
 
+- Similar to the other hyperparameters that we saw, `alpha` controls the fundamental tradeoff.
+
+- If we set alpha=0 that is the same as using `LinearRegression`.
 * larger `alpha` means likely underfit
 
 * smaller `alpha`  likely overfit
@@ -1287,7 +1280,6 @@ Similar to `Ridge`, we can access the weights and intercept using `coef_` and `i
 With logistic regression, the model randomly assigns one of the classes as a positive class and the other as negative.
 
 - Usually it would alphabetically order the target and pick the first one as negative and second one as the positive class.
-
 * The `classes_` attribute tells us which class is considered negative and which one is considered 
 
 The decision boundary of logistic regression is a **hyperplane** dividing the feature space in half.
@@ -1305,7 +1297,6 @@ We won’t really talk about the interpretation of this hyperparameter right now
 At a high level, the interpretation is similar to `C` of SVM RBF
 
 - smaller `C` might lead to underfitting
-
 * bigger `C`  might lead to overfitting
 
 ## Predicting Probability Scores
@@ -1313,12 +1304,14 @@ At a high level, the interpretation is similar to `C` of SVM RBF
 So far in the context of classification problems, we focused on getting “hard” predictions. Very often it’s useful to know “soft” predictions, i.e., how confident the model is with a given prediction.
 
 * For most of the `scikit-learn` classification models we can access this confidence score or probability score using a method called `predict_proba`.
-
 - The output of `predict_proba` is the probability of each class.
+
 - In binary classification, we get probabilities associated with both classes (even though this information is redundant).
+
 - The first entry is the estimated probability of the first class  and the second entry is the estimated probability of the second class  from `model.classes_`.
 
 - Because it’s a probability, the sum of the entries for both classes should always sum to 1.
+
 - Since the probabilities for the two classes sum to 1, exactly one of the classes will have a score >=0.5, which is going to be our  predicted class.
 
 ### Calculating Probability Score
@@ -1403,14 +1396,19 @@ Manual or expert knowledge or heuristics based optimization
 Data-driven or automated optimization
 
 - Formulate the hyperparamter optimization as a one big search problem.
+
 - Often we have many hyperparameters of different types: Categorical, integer, and continuous.
+
 - Often, the search space is quite big and systematic search for optimal values is infeasible.
 
 - Advantages
+  
   - reduce human effort
   - less prone to error and improve reproducibility
   - data-driven approaches may be effective
+
 - Disadvantages
+  
   - may be hard to incorporate intuition
   - be careful about overfitting on the validation set
 
@@ -1461,9 +1459,11 @@ grid_search.best_params_
 ```
 
 - It is often helpful to visualize results of all cross-validation experiments.
+
 - You can access this information using `cv_results_` attribute of a fitted `GridSearchCV` object.
 
 - Other than searching for best hyperparameter values, `GridSearchCV` also fits a new model on the whole training set with the parameters that yielded the best results.
+
 - So we can conveniently call `score` on the test set with a fitted `GridSearchCV` object.
 
 ```python
@@ -1529,8 +1529,6 @@ Optimization Bias of Hyperparameter Learning: Overfitting of the validation erro
 
 This is why we need a test set. The frustrating part is that if our dataset is small then our test set is also small 😔.
 
-
-
 If your test score is much lower than your CV score:
 
 * Try simpler models and use the test set a couple of times
@@ -1587,7 +1585,7 @@ In case of spotting problems, the thing that we are interested in spotting is co
 
 Note that what you consider as positive is important, if you flip what is considered to be positive and what is to be considered negative, we will end up with different TP, FP, TN, FN, and therefore different precision , recall, and f1 scores. 
 
-## Precision, Recall, F1 Score 
+## Precision, Recall, F1 Score
 
 We have been using `.score` to assess our models, which returns accuracy by default.
 
@@ -1812,6 +1810,7 @@ A useful setting is `class_weight="balanced"`.
 A similar idea of “balancing” classes can be applied to data splits.
 
 - We have the same option in `train_test_split` with the `stratify` argument.
+
 - By default it splits the data so that if we have 10% negative  examples in total, then each split will have 10% negative examples.
 
 - If you are carrying out cross validation using `cross_validate`, by default it uses [`StratifiedKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html). From the documentation:
@@ -1933,12 +1932,15 @@ How?:
 What does it do?:
 
 1. Create a collection (ensemble) of trees. Grow each tree on an independent bootstrap sample from the data.
+
 2. At each node:
+   
    * Randomly select a subset of features out of all features (independently for each node).
    * Find the best split on the selected features.
    * Grow the trees to maximum depth.
 
 3. Prediction time
+   
    * Vote the trees to get predictions for new example.
 
 ### Injecting Randomness
@@ -2039,8 +2041,11 @@ This `VotingClassifier` will take a *vote* using the predictions of the constitu
 Main parameter: `voting`
 
 - `voting='hard'`
+  
   - it uses the output of `predict` and actually votes.
+
 - `voting='soft'`
+  
   - with `voting='soft'` it averages the output of `predict_proba` and then thresholds / takes the larger.
 
 - The choice depends on whether you trust `predict_proba` from your base classifiers - if so, it’s nice to access that information.
@@ -2098,7 +2103,7 @@ What is an disadvantage of ensemble   models as opposed to just choosing one of 
 - Explain voting and stacking and the differences between them.
 - Use `scikit-learn` implementations of these ensemble methods.
 
-# 12: Features Importance & Feature Engineering 
+# 12: Features Importance & Feature Engineering
 
 ## Feature Correlations
 
@@ -2163,8 +2168,6 @@ Smaller SHAP values mean that we are less likely to get placed in the target cla
 * Apply SHAP to assess feature importance and interpret model predictions.
 * Explain force plot, summary plot, and dependence plot produced with shapely values.
 
-
-
 # 13: Feature Engineering
 
 Better features -> more flexibility, higher score. We can get simple and interpretable models.
@@ -2172,7 +2175,7 @@ Better features -> more flexibility, higher score. We can get simple and interpr
 If your features i.e. representation is bad, whatever model you build is not going to help.
 
 > Feature engineering is the process of transforming raw data into features that better represent the underlying problem to the predictive models, resulting in improved model accuracy on unseen data. 
->
+> 
 > -Jason Brownlee
 
 Better features usually help more than a better model. Good features ideally:
@@ -2188,23 +2191,13 @@ There is a trade-off between simple and expressive features
 
 In some domains there are natural transformations to do: 
 
-* 
-
-Feature engineering is super domain specific so it is hard to provide generalized knowledge
-
-
+* Feature engineering is super domain specific so it is hard to provide generalized knowledge
 
 How do we extract parts-of-speech information? We use pre-trained models. 
 
 * Popular libraries include: `nltk`, `spaCy`
 
-
-
 If we want to go beyond bag-of-words and incorporate human knowledge in models, we carry out feature engineering. 
-
-
-
-
 
 Feature Selection
 
@@ -2213,8 +2206,6 @@ Increases interpretability: no reason to use more features if it doesn't improve
 Computation: models fit/predict faster with fewer columns
 
 Data collection: may be cheaper with fewer features
-
-
 
 How do we select features? 
 
@@ -2226,21 +2217,15 @@ We can use domain knowledge to discard features. We are going to look briefly at
 
 These are related to looking at feature importance
 
-
-
 Model-based selection
 
-* 
-
-
-
-Recursive feature elimination (RFE) 
+* Recursive feature elimination (RFE) 
 
 * build a series of models
+
 * At each iteration, discard the least important feature according to the model
+
 * Computationally expenseive
-
-
 
 REF algorithm:
 
@@ -2250,8 +2235,6 @@ REF algorithm:
 4. Repeat until only k features are remaining
 
 This is NOT the same as removing the k least important features all at once
-
-
 
 General idea of search and score methods. 
 
@@ -2264,13 +2247,9 @@ Forward or backward selection:
 * Shrink or grow feature set by removing or adding one feature at a time
 * Makes the decision based on whether adding/removing the feature improves the CV score or not 
 
-
-
 Other ways to search
 
 * Stochastic local serach
-
-
 
 Warnings regarding feature selection
 
@@ -2279,7 +2258,4 @@ Warnings regarding feature selection
 * If features can be predicted from other features, you cannot know which one to pick
 * Relevance for features does not have to be a causal relationship
 
-
-
 Call peace arch crossing...
-

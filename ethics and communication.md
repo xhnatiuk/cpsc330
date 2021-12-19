@@ -110,6 +110,8 @@ Simplified advice is unlikely to generalize well across cases. Each data analysi
 
 # Communicaiton
 
+Why does communication matter? 
+
 
 
 ## Graphs

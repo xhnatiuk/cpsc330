@@ -536,3 +536,205 @@ What is an advantage of ensemble models as opposed to just choosing one of them?
 What is an disadvantage of ensemble models as opposed to just choosing one of them?
 
 - Slower, more code maintenance issues.
+
+# K-Means Clustering
+
+One of the most commonly used clustering algorithms. 
+
+**Main Idea**: represent each cluster by its cluster center and assign a cluster membership to each data point.
+
+- The labels provided by the algorithm have no actual meaning.
+
+- The centroids live in the same space as of the dataset but they are **not** actual data points, but instead are average points.
+
+- It always converges. Convergence is dependent upon the initial centers and it may converge to a sub-optimal solution.
+
+Fit algorithim uses an iterative process to determine these centers. Repeat:
+
+* Assign each example to the closest center
+
+* Estimate new centers as the average of observations in a cluster
+
+* Stop if centers stop changing or maximum iterations have been reached
+
+Input: 
+
+* `x`: a set of data points
+
+* `K` (or `n_clusters`): the number of clusters
+
+The output of `KMeans` is `K` clusters (groups) of the data points. Calling `predict` will give us the cluster assignment for each data point.
+
+```python
+kmeans = KMeans(n_clusters=3)
+# We are only passing X because this is unsupervised learning
+kmeans.fit(X)
+# returns an array of integer labels
+kmeans.predict(X)
+```
+
+In K-Means each cluster is represented by its cluster center.
+
+```python
+# returns a array of coordinates (n-dimensional)
+kmeans.cluster_centers_
+```
+
+After we have fit our model, we can use predict on new unseen examples. 
+
+Pros:
+
+* Easy to understand and implement
+
+* Runs relatively quickly and scales well to large datasets
+
+Cons: 
+
+* relies on random initializatin, and so outcomes can vary
+
+* requires us to specify the number of clusters in advance
+  
+  * very often you do not know the number in advance
+  
+  * elbow method and silhouette for optimizing this are difficult to interpret
+
+* Each point has to have a cluster assignment
+
+* Clusters are soley defined by center, and so can only capture relatively simple shapes
+  
+  * boundaries between clusters are linear
+  
+  * fails  to identify clusters with complex shapes
+
+## Choosing K
+
+In supervised learning we can carry out hyperparamater optimization using cross validation scores. But in unsupervised learning we do not have the target values, so it is difficult to objectively measure the effectiveness of our algorithim. 
+
+* There is no definitive approach, but there are some strategies
+
+### The Elbow Method
+
+This method looks at the sum of **intra-cluster distances**, which is also referred to as **inertia**.
+
+* The problem is that we can’t just look for `K` a that minimizes inertia because it decreases as `K` increases.
+  
+  * If I have number of clusters = number of examples, each example will 
+    have its own cluster and the intra-cluster distance will be 0.
+
+* Instead we evaluate the trade-off: “small k” vs “small intra-cluster distances”.
+
+* We can plot the graph of k vs intertia and look for the **elbow** of the graph. 
+
+You can access this intra-cluster distance or inertia as follows.
+
+```python
+d = {"K": [], "inertia": []}
+for k in range(1, 100, 10):
+    model = KMeans(n_clusters=k).fit(X)
+    d["K"].append(k)
+    d["inertia"].append(model.inertia_)
+
+pd.DataFrame(d)
+```
+
+### The Sillhouette Method
+
+The sillhouette method is not dependent on the notion of cluster centers. 
+
+The overall **Silhouette score** is the average of the Silhouette scores for all samples.
+
+The sillhouette score for a sample is calculated using the difference between the average nearest-cluster distance and the average intra-cluster distance (a) for each sample, normalized by the maximum value.
+
+$$
+\frac{b-a}{max(a,b)}
+$$
+
+- The best value is 1
+
+- The worst value is -1 (samples are in the wrong clusters)
+
+- Value near 0 means overlapping clusters
+
+**Mean intra-cluster distance (a)**: the averge distance of the points within a cluster to every other point within their cluster
+
+**Mean nearest-cluster distance (b)**: the average of the distances from all points to all the other points in the nearest cluster to them. 
+
+Unlike inertia:
+
+- larger values are better because they indicate that the point is further away from neighbouring clusters.
+
+- the overall silhouette score gets worse as you add more clusters because you end up being closer to neighbouring clusters.
+
+- We can apply Silhouette method to clustering methods other than K-Means.
+
+We can visualize the silhouette score for each example individually in a silhouette plot
+
+- The thickness of each silhouette indicates the cluster size.
+
+- The shape of each silhouette indicates the “goodness” for points in each cluster.
+
+- The length (or area) of each silhouette indicates the goodness of each cluster.
+
+- A slower dropoff (more rectangular) indicates more points are “happy” in their cluster.
+
+# DBSCAN
+
+Density Based Spatial Clustering of Applications with Noise
+
+Intuitivlely based on the idea that clusters form dense regions in the data, and so it works by identifying the "crowded" regions in the feature space. 
+
+Can address some of the limitations of K-Means we saw above.
+
+* We dont have to specify the number of clusters
+  
+  * But it has two other non-trival hyperparameters to tune
+
+* Points do not have to be assigned a label
+  
+  - The label is -1 if a point is unassigned.
+
+* the boundaries between clusters are not necessarily linear and so it can identify clusters with complex shapes
+
+Unfortunately unlike K-mean there is no predict method, DBSCAN only clsuters the points we have, not "new" or "test" points.
+
+DBSCAN has three kinds of points:
+
+1. Core Points: have at least min samples points in the neighborhood
+
+2. Border points: have fewer than min_samples points in the neighborhood but are connected to a core point
+
+3. Noise Points: do not belond in any cluster. Have less than min_samples points within a distance of eps of the starting point. 
+
+Hyperparameters:
+
+* eps
+  
+  * increasing means more points will be included in a cluster
+
+* min_samples
+  
+  * increasing means more points in less dense regions will either be labeled as their own cluster or noise. 
+
+In general these hyperparameters are difficult to tune. 
+
+Pros:
+
+* Can learn arbitrary cluster shapes
+
+* Can detect outliers
+
+Cons: 
+
+* Cannot predict on new examples
+
+* needs tuning of non-obvious hyperparameters
+
+## Evaluating DBSCAN Clusters
+
+We cannot use the elbow method to examine the goodness of clusters created with DBSCAN.
+
+We can use the silhouette method because its not dependent on the idea of cluster centers. 
+
+## Failure Cases
+
+DBSCAN doesn’t do well when we have clusters with different densities.
